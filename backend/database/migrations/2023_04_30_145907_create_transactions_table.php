@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedSmallInteger('sender_id');
-            $table->unsignedSmallInteger('recipient_id');
-            $table->decimal('amount', 8, 2);
-            $table->timestamp('transaction_date')->default(now());
-            $table->string('status')->default('pending');
-            $table->timestamps();
+        if (!Schema::hasTable('transactions')) {
 
-            $table->foreign('sender_id')->references('id')->on('users');
-            $table->foreign('recipient_id')->references('id')->on('users');
-
-        });
+            Schema::create('transactions', function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('sender_id');
+                $table->unsignedInteger('recipient_id');
+                $table->decimal('amount', 8, 2);
+                $table->timestamp('transaction_date')->default(now());
+                $table->string('status')->default('pending');
+                $table->timestamps();
+            
+                $table->foreign('sender_id')->references('id')->on('users');
+                $table->foreign('recipient_id')->references('id')->on('users');
+            });
+        }
     }
 
     /**

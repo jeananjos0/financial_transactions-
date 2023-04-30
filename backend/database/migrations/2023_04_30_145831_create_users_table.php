@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('fullname');
-            $table->string('cpf_cnpj')->unique();
-            $table->string('email')->unique();
-            $table->string('password')->unique();
-            $table->decimal('wallet_balance',8,2)->default(0);
-            $table->boolean('is_shopkeeper')->default(0);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('fullname');
+                $table->string('cpf_cnpj')->unique();
+                $table->string('email')->unique();
+                $table->string('password');
+                $table->decimal('wallet_balance', 8, 2)->default(0);
+                $table->boolean('is_shopkeeper')->default(0);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -30,5 +32,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
     }
-    
 };
