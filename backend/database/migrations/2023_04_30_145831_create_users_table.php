@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('fullname');
+            $table->string('cpf_cnpj')->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('password')->unique();
+            $table->decimal('wallet_balance',8,2)->default(0);
+            $table->boolean('is_shopkeeper')->default(0);
             $table->timestamps();
         });
     }
@@ -29,4 +30,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
     }
+    
 };
