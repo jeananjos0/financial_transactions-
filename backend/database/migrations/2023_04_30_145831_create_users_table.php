@@ -19,13 +19,14 @@ return new class extends Migration
                 $table->string('cpf_cnpj')->unique();
                 $table->string('email')->unique();
                 $table->string('password');
+                $table->string('active')->default(1);
                 $table->decimal('wallet_balance', 8, 2)->default(0);
                 $table->timestamps();
 
                 $table->foreign('role_id')->references('id')->on('roles');
             });
 
-            
+
         }
     }
 
