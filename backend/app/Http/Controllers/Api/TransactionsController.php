@@ -21,6 +21,8 @@ class TransactionsController extends Controller
         // Encontra o usuário destinatário pelo ID.
         $recipient = User::find($validatedData['recipient_id']);
 
+
+
         // Verifica se o remetente tem saldo suficiente para a transferência.
         if ($sender->wallet_balance < $validatedData['amount']) {
             return response()->json(['message' => 'Saldo insuficiente'], 400);
@@ -34,15 +36,35 @@ class TransactionsController extends Controller
             return response()->json(['message' => 'Erro ao autorizar a transferência'], 500);
         }
 
-        // Cria uma nova instância do modelo Transactions com os dados validados.
-        $transaction = new Transactions($validatedData);
 
-        // Define a data da transação como o momento atual.
-        $transaction->transaction_date = now();
 
         // Tenta salvar a transação no banco de dados.
         try {
+
+            $transaction = new Transactions();
+            $transaction->sender_id = $request->sender_id;
+            $transaction->recipient_id = $request->recipient_id;
+            $transaction->amount = $request->amount;
+            $transaction->transaction_date = now();
             $transaction->save();
+
+            // Faz uma requisição GET para o serviço de notificações.
+            $notificationResponse = Http::get('https://run.mocky.io/v3/4ce65eb0-2eda-4d76-8c98-8acd9cfd2d39');
+
+
+            // Se a requisição falhar, implementar lógica para tentar enviar a notificação novamente mais tarde.
+            if ($notificationResponse->failed()) {
+                // Implementar lógica para tentar enviar a notificação novamente mais tarde
+                return response()->json(['message' => 'Erro ao autorizar a transferência'], 500);
+            }
+
+
+            if ($notificationResponse['message'] != 'success') {
+                $transaction->status = "failed";
+                $transaction->save();
+                return response()->json(['message' => 'Erro ao autorizar a transferência'], 500);
+            }
+
 
             // Subtrai o valor da transferência do saldo do remetente.
             $sender->wallet_balance -= $validatedData['amount'];
@@ -52,15 +74,9 @@ class TransactionsController extends Controller
             $recipient->wallet_balance += $validatedData['amount'];
             $recipient->save();
 
-            // Faz uma requisição GET para o serviço de notificações.
-            $notificationResponse = Http::get('https://run.mocky.io/v3/4ce65eb0-2eda-4d76-8c98-8acd9cfd2d39');
 
-            // Se a requisição falhar, implementar lógica para tentar enviar a notificação novamente mais tarde.
-            if ($notificationResponse->failed()) {
-
-                // Implementar lógica para tentar enviar a notificação novamente mais tarde
-
-            }
+            $transaction->status = "complete";
+            $transaction->save();
 
             // Retorna uma mensagem de sucesso.
             return response()->json(['message' => 'Transferência realizada com sucesso']);
