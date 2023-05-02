@@ -3,14 +3,24 @@
 ## Tabela de Usuários (users):
 
 <strong style="color:green">id:</strong> Uma chave primária única para identificar cada usuário. Auto-incrementada para cada novo usuário.</br>
+<strong style="color:green">role_id:</strong>  A chave estrangeira que se refere ao id da tabela de permissão.</br>
 <strong style="color:green">fullname:</strong> O nome completo do usuário.</br>
 <strong style="color:green">cpf_cnpj:</strong> O número de CPF (para indivíduos) ou CNPJ (para lojistas) do usuário. Deve ser único para cada usuário.</br>
 <strong style="color:green">email:</strong> O endereço de e-mail do usuário. Deve ser único para cada usuário.</br>
 <strong style="color:green">password:</strong> A hash da senha do usuário, usada para autenticação.</br>
 <strong style="color:green">wallet_balance:</strong> O saldo atual na carteira do usuário. Pode aumentar quando o usuário recebe dinheiro e diminuir quando o usuário envia dinheiro.</br>
-<strong style="color:green">is_shopkeeper:</strong> Um indicador booleano para determinar se o usuário é um lojista. 0 significa que o usuário é um cliente comum, 1 significa que o usuário é um lojista.</br>
 <strong style="color:green">created_at:</strong> A data e a hora em que a conta do usuário foi criada.</br>
 <strong style="color:green">updated_at:</strong> A última data e hora em que os detalhes da conta do usuário foram atualizados.</br>
+
+
+## Tabela de Permições (Roles):
+
+<strong style="color:green">id:</strong> Uma chave primária única para identificar cada usuário. Auto-incrementada para cada novo usuário.</br>
+<strong style="color:green">description:</strong> Descrição do nível de permissão do usuário.</br>
+<strong style="color:green">created_at:</strong> A data e a hora em que a conta do usuário foi criada.</br>
+<strong style="color:green">updated_at:</strong> A última data e hora em que os detalhes da conta do usuário foram atualizados.</br>
+
+
 
 ## Tabela de Transações (transactions):
 

@@ -14,14 +14,18 @@ return new class extends Migration
         if (!Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
                 $table->increments('id');
+                $table->integer('role_id');
                 $table->string('fullname');
                 $table->string('cpf_cnpj')->unique();
                 $table->string('email')->unique();
                 $table->string('password');
                 $table->decimal('wallet_balance', 8, 2)->default(0);
-                $table->boolean('is_shopkeeper')->default(0);
                 $table->timestamps();
+
+                $table->foreign('role_id')->references('id')->on('roles');
             });
+
+            
         }
     }
 
