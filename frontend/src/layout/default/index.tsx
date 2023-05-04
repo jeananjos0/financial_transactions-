@@ -1,19 +1,44 @@
 import { Outlet, useNavigate, Link } from "react-router-dom";
+import logo from "../../assets/logocrop.png"
+import Swal from "sweetalert2";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/Auth/AuthContext";
 
 export default function LayoutDefault() {
 
+    function hiderShowMenu() {
+        (window as any).$("#main-wrapper").toggleClass("show-sidebar");
+    }
+
+    const auth = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await auth.logout();
+        navigate('/')
+        Swal.fire({
+            toast: true,
+            icon: "success",
+            showConfirmButton: false,
+            timer: 3000,
+            title: 'Deslogado com sucesso.',
+            position: 'top-right',
+            timerProgressBar: true
+        })
+    }
+
     return (
-        <div className="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        <div className="page-wrapper show-sidebar" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
             data-sidebar-position="fixed" data-header-position="fixed">
             {/* <!-- Sidebar Start --> */}
             <aside className="left-sidebar">
                 {/* <!-- Sidebar scroll--> */}
                 <div>
                     <div className="brand-logo d-flex align-items-center justify-content-between">
-                        <a href="./index.html" className="text-nowrap logo-img">
-                            <img src="../assets/images/logos/dark-logo.svg" width="180" alt="" />
-                        </a>
-                        <div className="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+
+                        <img src={logo} width="180" alt="" />
+
+                        <div onClick={hiderShowMenu} className="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                             <i className="ti ti-x fs-8"></i>
                         </div>
                     </div>
@@ -49,7 +74,7 @@ export default function LayoutDefault() {
                     <nav className="navbar navbar-expand-lg navbar-light">
                         <ul className="navbar-nav">
                             <li className="nav-item d-block d-xl-none">
-                                <a className="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                                <a className="nav-link sidebartoggler nav-icon-hover" onClick={hiderShowMenu}>
                                     <i className="ti ti-menu-2"></i>
                                 </a>
                             </li>
@@ -64,18 +89,24 @@ export default function LayoutDefault() {
                             <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 
                                 <li className="nav-item dropdown">
+
                                     <a className="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                         aria-expanded="false">
+                                       
                                         <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" className="rounded-circle" />
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                                         <div className="message-body">
+
+                                            <a href="javascript:void(0)" className="d-flex align-items-center gap-2 dropdown-item">
+                                                <p className="mb-0 fs-3">olá, {auth.user?.fullname}</p>
+                                            </a>
                                             <a href="javascript:void(0)" className="d-flex align-items-center gap-2 dropdown-item">
                                                 <i className="ti ti-user fs-6"></i>
                                                 <p className="mb-0 fs-3">Meu Perfil</p>
                                             </a>
 
-                                            <a href="./authentication-login.html" className="btn btn-outline-primary mx-3 mt-2 d-block">sair</a>
+                                            <a onClick={handleLogout} className="btn btn-outline-primary mx-3 mt-2 d-block">sair</a>
                                         </div>
                                     </div>
                                 </li>

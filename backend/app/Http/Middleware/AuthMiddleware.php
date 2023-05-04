@@ -56,8 +56,8 @@ class AuthMiddleware
         }
         // Verifica se a exceção é do tipo TokenExpiredException
         elseif ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-            // Retorna uma resposta JSON com a mensagem de erro e o código de status HTTP 402 (Necessário pagamento)
-            return response()->json(['error' => 'Token expirado!'], Response::HTTP_PAYMENT_REQUIRED);
+            // Retorna uma resposta JSON com a mensagem de erro e o código de status HTTP 401 (Não Autorizado)
+            return response()->json(['error' => 'Token expirado!'], Response::HTTP_UNAUTHORIZED);
         }
         // Caso contrário, trata-se de uma exceção genérica
         else {

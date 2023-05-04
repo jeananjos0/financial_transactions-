@@ -5,9 +5,9 @@ export const HAuth = () => ({
         const response = await Api.post('/auth/me');
         return response;
     },
-    login: async (username: string, password: string) => {
+    login: async (email: string, password: string) => {
         const response = await Api.post('/auth/login', {
-            username: username,
+            email: email,
             password: password
         });
         return response.data;

@@ -21,6 +21,13 @@ Route::post('auth/login', [AuthController::class,  'login']);
 
 Route::middleware('AuthMiddleware')->group(function () {
 
+
+    Route::prefix('auth')->controller(AuthController::class)->group(function () {
+        Route::post('me', 'me');
+        Route::post('logout',);
+        Route::post('refresh');
+    });
+
     Route::controller(UserController::class)->prefix('users')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
