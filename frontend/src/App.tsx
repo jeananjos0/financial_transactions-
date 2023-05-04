@@ -1,10 +1,11 @@
-import React from 'react';
+import { HashRouter} from 'react-router-dom';
+import Rotas from './routes';
 
 function App() {
   return (
-    <div className="App">
-     <h1>Front Financial transactions</h1>
-    </div>
+    <HashRouter>
+      <Rotas />
+    </HashRouter>
   );
 }
 
